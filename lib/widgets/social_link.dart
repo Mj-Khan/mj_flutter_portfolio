@@ -5,12 +5,14 @@ class SocialLink extends StatefulWidget {
   final IconData icon;
   final String label;
   final String url;
+  final Color accentColor;
 
   const SocialLink({
     super.key,
     required this.icon,
     required this.label,
     required this.url,
+    this.accentColor = Colors.green,
   });
 
   @override
@@ -28,9 +30,10 @@ class _SocialLinkState extends State<SocialLink> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final color = _hovered
-        ? (isDark ? Colors.white : Colors.black87)
-        : Colors.grey.shade500;
+        ? widget.accentColor
+        : (isDark ? Colors.grey.shade400 : Colors.grey.shade600);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -38,18 +41,21 @@ class _SocialLinkState extends State<SocialLink> {
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: _launch,
-        child: AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 200),
-          style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: color),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             children: [
-              Icon(widget.icon, size: 16, color: color),
+              Icon(widget.icon, size: 18, color: color),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  widget.label,
+                  _hovered ? '> ${widget.label}' : widget.label,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14, color: color),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: _hovered ? FontWeight.w800 : FontWeight.w600,
+                    color: color,
+                  ),
                 ),
               ),
             ],

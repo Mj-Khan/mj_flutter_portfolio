@@ -8,7 +8,7 @@ import '../widgets/expertise_section.dart';
 import '../widgets/experience_section.dart';
 import '../widgets/projects_section.dart';
 import '../widgets/contact_section.dart';
-import '../widgets/background_blobs.dart';
+import '../widgets/background_blobs.dart'; // Which is actually now RetroBackground
 
 class ResumeHome extends StatefulWidget {
   final bool isDark;
@@ -33,9 +33,6 @@ class _ResumeHomeState extends State<ResumeHome> with TickerProviderStateMixin {
   late Animation<Offset> _railSlide;
   late Animation<double> _contentFade;
   late Animation<Offset> _contentSlide;
-
-  Offset mouseOffset = Offset.zero;
-  Offset _cursorPos = Offset.zero;
 
   // Section keys for scroll-to-section
   final _heroKey = GlobalKey();
@@ -144,36 +141,18 @@ class _ResumeHomeState extends State<ResumeHome> with TickerProviderStateMixin {
     final isDesktop = size.width > 1000;
 
     return Scaffold(
-      body: MouseRegion(
-        onHover: (e) {
-          setState(() {
-            _cursorPos = e.position;
-            mouseOffset = Offset(
-              (e.position.dx - size.width / 2) / size.width,
-              (e.position.dy - size.height / 2) / size.height,
-            );
-          });
-        },
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: widget.isDark
+                ? AppColors.retroBorderDark
+                : AppColors.retroBorderLight,
+            width: 8, // Chonky global frame
+          ),
+        ),
         child: Stack(
           children: [
-            BackgroundBlobs(
-              controller: _blobController,
-              mouseOffset: mouseOffset,
-            ),
-            // Cursor spotlight glow
-            if (_cursorPos != Offset.zero)
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: CustomPaint(
-                    painter: CursorGlowPainter(
-                      position: _cursorPos,
-                      accent: widget.isDark
-                          ? AppColors.darkAccent1
-                          : AppColors.lightAccent1,
-                    ),
-                  ),
-                ),
-              ),
+            RetroBackground(controller: _blobController),
             Column(
               children: [
                 // Mobile-only top bar

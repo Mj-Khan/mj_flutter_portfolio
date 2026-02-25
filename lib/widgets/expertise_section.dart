@@ -61,16 +61,23 @@ class ExpertiseSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    PortfolioContent.expertiseTitle,
-                    style: TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 8),
                   Text(
-                    'Technologies & tools I work with',
+                    PortfolioContent.expertiseTitle.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w900,
+                      color: isDark
+                          ? AppColors.textMainDark
+                          : AppColors.textMainLight,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    '> Technologies & tools I work with_', // Blinking cursor style
                     style: TextStyle(
                       fontSize: 15,
-                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w600,
+                      color: accent,
                       height: 1.5,
                     ),
                   ),
@@ -101,6 +108,10 @@ class _SkillCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
+
     return GlassCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,53 +120,54 @@ class _SkillCategoryCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: accent.withValues(alpha: 0.14),
+                  border: Border.all(color: borderCol, width: 2), // Boxy icon
+                  color: isDark
+                      ? AppColors.darkScaffold
+                      : AppColors.lightScaffold,
                 ),
-                child: Icon(cat.icon, color: accent, size: 18),
+                child: Icon(cat.icon, color: accent, size: 20),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  cat.name,
+                  cat.name.toUpperCase(), // Retro caps
                   style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
                     height: 1.3,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           // Skill chips
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: 10,
+            runSpacing: 10,
             children: cat.skills.map((skill) {
               return Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
+                  horizontal: 14,
+                  vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
                   color: isDark
-                      ? Colors.white.withValues(alpha: 0.07)
-                      : Colors.black.withValues(alpha: 0.05),
-                  border: Border.all(color: accent.withValues(alpha: 0.25)),
+                      ? AppColors.darkScaffold
+                      : AppColors.lightScaffold,
+                  border: Border.all(color: borderCol, width: 2), // Boxy chips
                 ),
                 child: Text(
                   skill,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w700,
                     color: isDark
-                        ? Colors.white.withValues(alpha: 0.85)
-                        : Colors.black.withValues(alpha: 0.75),
+                        ? AppColors.textMainDark
+                        : AppColors.textMainLight,
                   ),
                 ),
               );

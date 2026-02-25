@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
 import '../portfolio_content.dart';
-import 'gradient_text.dart';
+import 'gradient_text.dart'; // Which is actually now RetroText
 import 'glass_card.dart';
 
 class HeroSection extends StatelessWidget {
@@ -31,7 +31,7 @@ class HeroSection extends StatelessWidget {
                     child: _HeroText(a1: accent1, a2: accent2),
                   ),
                   const SizedBox(width: 80),
-                  Expanded(flex: 1, child: const _HeroSideCard()),
+                  const Expanded(flex: 1, child: _HeroSideCard()),
                 ],
               )
             : Column(
@@ -55,32 +55,39 @@ class _HeroText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          PortfolioContent.heroLabel,
-          style: const TextStyle(
-            fontSize: 12,
+          '> ${PortfolioContent.heroLabel.toUpperCase()}',
+          style: TextStyle(
+            fontSize: 14,
             letterSpacing: 3,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textMuted,
+            fontWeight: FontWeight.w800,
+            color: a1, // Neon terminal green/accent
           ),
         ),
         const SizedBox(height: 24),
-        GradientText(
+        RetroText(
           PortfolioContent.heroHeadline,
           style: const TextStyle(
             fontSize: 64,
             height: 1.1,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w900,
           ),
-          colors: [a1, a2],
+          color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+          shadowColor: a1, // High contrast trailing shadow
         ),
         const SizedBox(height: 40),
-        const Text(
+        Text(
           PortfolioContent.heroBio,
-          style: TextStyle(fontSize: 18, height: 1.8),
+          style: TextStyle(
+            fontSize: 18,
+            height: 1.8,
+            color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+          ),
         ),
         const SizedBox(height: 40),
         Wrap(
@@ -102,6 +109,9 @@ class _HeroSideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
 
     return GlassCard(
       child: Column(
@@ -111,10 +121,10 @@ class _HeroSideCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  PortfolioContent.focusAreasTitle,
+                  PortfolioContent.focusAreasTitle.toUpperCase(),
                   style: const TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
@@ -125,29 +135,29 @@ class _HeroSideCard extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.available.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(20),
+                  color: isDark
+                      ? AppColors.retroBgDark
+                      : AppColors.retroBgLight,
                   border: Border.all(
-                    color: AppColors.available.withValues(alpha: 0.35),
+                    color: AppColors.available,
+                    width: 2, // chunky border for available status
                   ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: AppColors.available,
-                        shape: BoxShape.circle,
-                      ),
+                      width: 8,
+                      height: 8, // Square block
+                      color: AppColors
+                          .available, // Retro pure square pixel indication
                     ),
                     const SizedBox(width: 6),
                     const Text(
                       PortfolioContent.availabilityLabel,
                       style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
                         color: AppColors.available,
                       ),
                     ),
@@ -156,26 +166,35 @@ class _HeroSideCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           ...PortfolioContent.focusAreas.map(
             (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(bottom: 20),
               child: Row(
                 children: [
                   Container(
-                    width: 36,
-                    height: 36,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: accent.withValues(alpha: 0.12),
+                      border: Border.all(
+                        color: borderCol,
+                        width: 2,
+                      ), // Boxy icon frame
+                      color: isDark
+                          ? AppColors.darkScaffold
+                          : AppColors.lightScaffold,
                     ),
-                    child: Icon(item.icon, color: accent, size: 18),
+                    child: Icon(item.icon, color: accent, size: 20),
                   ),
-                  const SizedBox(width: 14),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Text(
-                      item.label,
-                      style: const TextStyle(fontSize: 14, height: 1.4),
+                      '> ${item.label}', // Terminal prefix
+                      style: const TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -196,15 +215,28 @@ class _Metric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           value,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w900,
+            color: isDark ? AppColors.neoMagenta : AppColors.lightAccent2,
+          ),
         ),
         const SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.grey.shade500)),
+        Text(
+          label.toUpperCase(),
+          style: TextStyle(
+            color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1,
+          ),
+        ),
       ],
     );
   }

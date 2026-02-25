@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/app_colors.dart';
 import '../portfolio_content.dart';
 import 'project_card.dart';
 
@@ -9,17 +10,23 @@ class ProjectsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          PortfolioContent.projectsTitle,
-          style: TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
+        Text(
+          '> ${PortfolioContent.projectsTitle.toUpperCase()}_',
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.w900,
+            color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+          ),
         ),
         const SizedBox(height: 60),
         ...PortfolioContent.projects.map(
           (p) => Padding(
-            padding: const EdgeInsets.only(bottom: 32),
+            padding: const EdgeInsets.only(bottom: 40),
             child: ProjectCard(project: p),
           ),
         ),

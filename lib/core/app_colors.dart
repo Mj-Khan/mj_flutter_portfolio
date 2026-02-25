@@ -2,51 +2,48 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // ── Backgrounds ──────────────────────────────────────────
-  static const lightScaffold = Color(0xFFF3F7F4); // warm white-green
-  static const darkScaffold = Color(0xFF0C1010); // deep forest black
+  static const lightScaffold = Color(
+    0xFFEBE5CE,
+  ); // Soft retro paper / Gameboy beige
+  static const darkScaffold = Color(
+    0xFF1E1E24,
+  ); // Muted dark slate, not pure black
 
-  // ── Accents ───────────────────────────────────────────────
-  static const lightAccent1 = Color(0xFF22C55E); // vibrant green
-  static const lightAccent2 = Color(0xFF0EA5E9); // sky blue
+  // ── Accents (Muted Retro / SNES / GameBoy Palette) ───────
+  static const neoGreen = Color(
+    0xFF4CAF50,
+  ); // Softer, pastel green instead of neon
+  static const neoMagenta = Color(0xFFE57373); // Soft salmon/coral pink
+  static const neoCyan = Color(0xFF64B5F6); // Soft sky blue
+  static const neoYellow = Color(0xFFFFD54F); // Muted retro gold
 
-  static const darkAccent1 = Color(0xFF4ADE80); // bright lime-green
-  static const darkAccent2 = Color(0xFF38BDF8); // lighter sky blue
+  // Kept for signature compatibility across app, mapped to retro
+  static const lightAccent1 = Color(0xFF388E3C); // Muted dark green
+  static const lightAccent2 = Color(0xFFD32F2F); // Muted dark red/coral
 
-  // ── Background blobs ──────────────────────────────────────
-  static const blob1a = Color(0x2822C55E); // green blob
-  static const blob1b = Color(0x1022C55E);
-  static const blob2a = Color(0x280EA5E9); // sky blob
-  static const blob2b = Color(0x100EA5E9);
-  static const blob3a = Color(0x1A4ADE80); // lime accent blob
-  static const blob3b = Color(0x0A4ADE80);
+  static const darkAccent1 = neoGreen;
+  static const darkAccent2 = neoMagenta;
 
-  // New scattered blobs (Right side emphasis)
-  static const blob4a = Color(0x1A0EA5E9); // light blue
-  static const blob4b = Color(0x050EA5E9);
-  static const blob5a = Color(0x1522C55E); // pale green
-  static const blob5b = Color(0x0522C55E);
-  static const blob6a = Color(0x1538BDF8); // sky accent
-  static const blob6b = Color(0x0538BDF8);
-  static const blob7a = Color(0x104ADE80); // faint lime
-  static const blob7b = Color(0x024ADE80);
+  // ── Card & Container Styling ─────────────────────────────
+  // Instead of pure black or pure neon green borders, we use dark shades
+  static const retroBorderLight = Color(0xFF424242); // Dark grey chunky border
+  static const retroBorderDark = Color(0xFF616161); // Medium grey chunky border
 
-  // Legacy blob aliases
-  static const blobGradient1 = blob1a;
-  static const blobGradient2 = blob2a;
-
-  // ── Glass card ────────────────────────────────────────────
-  static const glassBorder = 0.15;
-  static const glassBorderHover = 0.30;
-  static const glassLightShadow = 0.12;
-  static const glassDarkShadow = 0.55;
+  static const retroBgLight = Color(0xFFF5F0E1); // Off-white for cards
+  static const retroBgDark = Color(
+    0xFF2D2D36,
+  ); // Slighter lighter slate for cards
 
   // ── Semantic text colors ──────────────────────────────────
-  static const textMuted = Color(0xFF9E9E9E); // ~grey.shade500
-  static const textSub = Color(0xFF757575); // ~grey.shade600
-  static const drawerHandle = Color(0xFFBDBDBD); // ~grey.shade400
+  static const textMuted = Color(0xFF8D8D8D);
+  static const textSub = Color(0xFFA1A1A1);
+
+  static const textMainLight = Color(0xFF2C2C2C); // Soft off-black
+  static const textMainDark = Color(0xFFDCDCDC); // Soft off-white
 
   // ── Status ────────────────────────────────────────────────
-  static const available = Color(0xFF22C55E); // open to work green
+  static const available = neonGreen; // open to work
+  static const neonGreen = neoGreen; // alias
 
   // ── Utility ───────────────────────────────────────────────
   static const white70 = Color(0xB3FFFFFF);

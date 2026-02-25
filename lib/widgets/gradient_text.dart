@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
 
-class GradientText extends StatelessWidget {
+class RetroText extends StatelessWidget {
   final String text;
   final TextStyle style;
-  final List<Color> colors;
+  final Color color;
+  final Color shadowColor;
 
-  const GradientText(
+  const RetroText(
     this.text, {
     super.key,
     required this.style,
-    required this.colors,
+    required this.color,
+    required this.shadowColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) =>
-          LinearGradient(colors: colors).createShader(bounds),
-      child: Text(text, style: style.copyWith(color: Colors.white)),
+    return Text(
+      text,
+      style: style.copyWith(
+        color: color,
+        shadows: [
+          Shadow(
+            color: shadowColor,
+            offset: const Offset(3, 3), // Chonky shadow
+            blurRadius: 0, // Zero blur = Retro sharp look
+          ),
+        ],
+      ),
     );
   }
 }

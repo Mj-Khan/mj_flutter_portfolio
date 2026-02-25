@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/app_colors.dart';
 import '../portfolio_content.dart';
 import 'timeline_item.dart';
 
@@ -7,12 +8,19 @@ class ExperienceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = isDark ? AppColors.textMainDark : AppColors.textMainLight;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          PortfolioContent.experienceTitle,
-          style: TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
+        Text(
+          '> ${PortfolioContent.experienceTitle.toUpperCase()}_',
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.w900,
+            color: color,
+          ),
         ),
         const SizedBox(height: 60),
         ...PortfolioContent.experienceItems.expand(

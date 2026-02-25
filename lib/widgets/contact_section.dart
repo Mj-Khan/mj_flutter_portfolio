@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
 import '../portfolio_content.dart';
-import 'gradient_text.dart';
+import 'gradient_text.dart'; // RetroText
 import 'cta_button.dart';
 
 class ContactSection extends StatelessWidget {
@@ -16,39 +16,41 @@ class ContactSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 1,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                accent1.withValues(alpha: 0.5),
-                accent2.withValues(alpha: 0.0),
-              ],
-            ),
-          ),
+          height: 4, // Chunky retro divider
+          color: isDark
+              ? AppColors.retroBorderDark
+              : AppColors.retroBorderLight,
         ),
         const SizedBox(height: 80),
-        GradientText(
+        RetroText(
           PortfolioContent.contactHeadline,
           style: const TextStyle(
             fontSize: 52,
             height: 1.15,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w900,
           ),
-          colors: [accent1, accent2],
+          color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+          shadowColor: accent1,
         ),
         const SizedBox(height: 24),
-        const Text(
+        Text(
           PortfolioContent.contactSubtext,
-          style: TextStyle(fontSize: 17, height: 1.8),
+          style: TextStyle(
+            fontSize: 17,
+            height: 1.8,
+            color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+          ),
         ),
         const SizedBox(height: 48),
         Wrap(
           spacing: 20,
-          runSpacing: 16,
+          runSpacing: 20,
           children: [
             CtaButton(
               label: 'Send an Email',
@@ -74,9 +76,17 @@ class ContactSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 80),
-        Text(
-          PortfolioContent.copyrightLine,
-          style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+        // Footer text
+        Center(
+          child: Text(
+            PortfolioContent.copyrightLine.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textMuted,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 2.0,
+            ),
+          ),
         ),
       ],
     );

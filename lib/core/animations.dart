@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
 /* =========================================================
-   REVEAL ON SCROLL
+   REVEAL ON SCROLL (BLOCKY/GLITCH STYLE)
 ========================================================= */
 
 class RevealOnScroll extends StatefulWidget {
@@ -24,24 +24,24 @@ class RevealOnScroll extends StatefulWidget {
 class _RevealOnScrollState extends State<RevealOnScroll>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animController;
-  late final Animation<double> _fade;
-  late final Animation<Offset> _slide;
+  late final Animation<double> _visibility;
   bool _revealed = false;
 
   @override
   void initState() {
     super.initState();
+    // Faster, snappier retro animation
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 150),
     );
-    _fade = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _slide = Tween<Offset>(
-      begin: const Offset(0, 0.06),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
 
-    // Check immediately (for sections already in view at load time)
+    // Instead of a smooth curve fade, we step it
+    _visibility = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.linear));
+
     WidgetsBinding.instance.addPostFrameCallback((_) => _check());
     widget.scrollController.addListener(_check);
   }
@@ -61,8 +61,7 @@ class _RevealOnScrollState extends State<RevealOnScroll>
     final viewportHeight = MediaQuery.of(context).size.height;
     final pos = box.localToGlobal(Offset.zero);
 
-    // Trigger when top of widget appears within the viewport
-    if (pos.dy < viewportHeight * 0.92) {
+    if (pos.dy < viewportHeight * 0.95) {
       _revealed = true;
       widget.scrollController.removeListener(_check);
       Future.delayed(widget.delay, () {
@@ -73,45 +72,21 @@ class _RevealOnScrollState extends State<RevealOnScroll>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fade,
-      child: SlideTransition(position: _slide, child: widget.child),
+    return AnimatedBuilder(
+      animation: _visibility,
+      builder: (context, child) {
+        // Step function visibility to simulate retro frame rate drawing
+        final double opacity = _visibility.value > 0.5 ? 1.0 : 0.0;
+
+        return Opacity(opacity: opacity, child: child);
+      },
+      child: widget.child,
     );
   }
 }
 
 /* =========================================================
-   CURSOR GLOW PAINTER
-========================================================= */
-
-class CursorGlowPainter extends CustomPainter {
-  final Offset position;
-  final Color accent;
-
-  CursorGlowPainter({required this.position, required this.accent});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const radius = 500.0;
-    final paint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          accent.withValues(alpha: 0.10),
-          accent.withValues(alpha: 0.04),
-          Colors.transparent,
-        ],
-        stops: const [0.0, 0.4, 1.0],
-      ).createShader(Rect.fromCircle(center: position, radius: radius));
-    canvas.drawCircle(position, radius, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CursorGlowPainter old) =>
-      old.position != position || old.accent != accent;
-}
-
-/* =========================================================
-   THEME SWITCH
+   THEME SWITCH (CHUNKY PIXEL STYLE)
 ========================================================= */
 
 class AnimatedThemeSwitch extends StatelessWidget {
@@ -126,30 +101,40 @@ class AnimatedThemeSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent1 = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
-    final accent2 = isDark ? AppColors.darkAccent2 : AppColors.lightAccent2;
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
+    final bgCol = isDark ? AppColors.retroBgDark : AppColors.retroBgLight;
+    final thumbCol = isDark ? AppColors.neoGreen : AppColors.neoMagenta;
 
-    return GestureDetector(
-      onTap: () => onChanged(!isDark),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        width: 70,
-        height: 36,
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          gradient: LinearGradient(colors: [accent1, accent2]),
-        ),
-        child: AnimatedAlign(
-          duration: const Duration(milliseconds: 400),
-          alignment: isDark ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            width: 28,
-            height: 28,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => onChanged(!isDark),
+        child: Container(
+          width: 50,
+          height: 24,
+          decoration: BoxDecoration(
+            color: bgCol,
+            border: Border.all(color: borderCol, width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: borderCol,
+                offset: const Offset(2, 2), // hard shadow
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 100), // snap
+                curve: Curves.linear,
+                left: isDark ? 26 : 0,
+                top: 0,
+                bottom: 0,
+                child: Container(width: 20, color: thumbCol),
+              ),
+            ],
           ),
         ),
       ),

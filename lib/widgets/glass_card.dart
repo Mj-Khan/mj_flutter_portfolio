@@ -17,41 +17,30 @@ class _GlassCardState extends State<GlassCard> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
+    final bgCol = isDark ? AppColors.retroBgDark : AppColors.retroBgLight;
+
     return MouseRegion(
       onEnter: (_) => setState(() => hovered = true),
       onExit: (_) => setState(() => hovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 100), // Quick snap
         padding: const EdgeInsets.all(40),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
+          color: bgCol,
           border: Border.all(
-            color: Colors.white.withValues(
-              alpha: hovered
-                  ? AppColors.glassBorderHover
-                  : AppColors.glassBorder,
-            ),
+            color: borderCol,
+            width: 3, // chunky border
           ),
           boxShadow: [
             BoxShadow(
-              color: isDark
-                  ? Colors.black.withValues(alpha: AppColors.glassDarkShadow)
-                  : Colors.black.withValues(alpha: AppColors.glassLightShadow),
-              blurRadius: hovered ? 40 : 20,
-              offset: const Offset(0, 10),
+              color: borderCol,
+              // Hard retro shadow that shifts on hover for a "pushed down" or "lifted" effect
+              offset: hovered ? const Offset(8, 8) : const Offset(4, 4),
             ),
           ],
-          gradient: LinearGradient(
-            colors: isDark
-                ? [
-                    Colors.white.withValues(alpha: 0.08),
-                    Colors.white.withValues(alpha: 0.03),
-                  ]
-                : [
-                    Colors.white.withValues(alpha: 0.35),
-                    Colors.white.withValues(alpha: 0.15),
-                  ],
-          ),
         ),
         child: widget.child,
       ),

@@ -21,41 +21,27 @@ class _ProjectCardState extends State<ProjectCard> {
     final accent = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
     final p = widget.project;
 
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
+    final bgCol = isDark ? AppColors.retroBgDark : AppColors.retroBgLight;
+
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 100), // snap
         padding: const EdgeInsets.all(40),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: Colors.white.withValues(
-              alpha: _hovered
-                  ? AppColors.glassBorderHover
-                  : AppColors.glassBorder,
-            ),
-          ),
+          color: bgCol,
+          border: Border.all(color: borderCol, width: 3),
           boxShadow: [
             BoxShadow(
-              color: isDark
-                  ? Colors.black.withValues(alpha: AppColors.glassDarkShadow)
-                  : Colors.black.withValues(alpha: AppColors.glassLightShadow),
-              blurRadius: _hovered ? 40 : 20,
-              offset: const Offset(0, 10),
+              color: borderCol,
+              offset: _hovered ? const Offset(8, 8) : const Offset(4, 4),
             ),
           ],
-          gradient: LinearGradient(
-            colors: isDark
-                ? [
-                    Colors.white.withValues(alpha: 0.08),
-                    Colors.white.withValues(alpha: 0.03),
-                  ]
-                : [
-                    Colors.white.withValues(alpha: 0.35),
-                    Colors.white.withValues(alpha: 0.15),
-                  ],
-          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,8 +56,8 @@ class _ProjectCardState extends State<ProjectCard> {
             Text(
               p.tagline,
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
                 color: accent,
               ),
             ),
@@ -89,15 +75,15 @@ class _ProjectCardState extends State<ProjectCard> {
                   ),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.black.withValues(alpha: 0.04),
-                    borderRadius: BorderRadius.circular(20),
+                        ? AppColors.darkScaffold
+                        : AppColors.lightScaffold,
+                    border: Border.all(color: borderCol, width: 2),
                   ),
                   child: Text(
                     c,
                     style: const TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 );
@@ -113,12 +99,10 @@ class _ProjectCardState extends State<ProjectCard> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.link, size: 18, color: accent),
-                    const SizedBox(width: 8),
                     Text(
-                      p.linkLabel!,
+                      '> ${p.linkLabel!}', // Retro typing indicator
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: accent,
                       ),

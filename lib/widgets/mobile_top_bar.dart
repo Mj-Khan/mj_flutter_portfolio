@@ -43,116 +43,132 @@ class MobileTopBar extends StatelessWidget {
       builder: (sheetContext) {
         final currentIsDark =
             Theme.of(sheetContext).brightness == Brightness.dark;
-        final accent1 = currentIsDark
+
+        // Retro styling
+        final borderCol = currentIsDark
+            ? AppColors.retroBorderDark
+            : AppColors.retroBorderLight;
+        final bgCol = currentIsDark
+            ? AppColors.retroBgDark
+            : AppColors.retroBgLight;
+        final accent = currentIsDark
             ? AppColors.darkAccent1
             : AppColors.lightAccent1;
 
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
-          decoration: BoxDecoration(
-            color: currentIsDark
-                ? AppColors.darkScaffold
-                : AppColors.lightScaffold,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-            border: Border.all(
-              color: currentIsDark
-                  ? Colors.white.withValues(alpha: 0.08)
-                  : Colors.black.withValues(alpha: 0.05),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Handle
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 32),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              Text(
-                'NAVIGATION',
-                style: TextStyle(
-                  fontSize: 11,
-                  letterSpacing: 2.5,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade500,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ...navItems.map(
-                (item) => GestureDetector(
-                  onTap: () {
-                    Navigator.pop(sheetContext);
-                    onNavTap(item.$2);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: activeSection == item.$1 ? 20 : 12,
-                          height: 2,
-                          decoration: BoxDecoration(
-                            color: activeSection == item.$1
-                                ? accent1
-                                : Colors.grey.shade500,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          item.$1,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: activeSection == item.$1
-                                ? FontWeight.w600
-                                : FontWeight.w400,
-                            color: activeSection == item.$1
-                                ? accent1
-                                : Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Divider(color: Colors.grey.withValues(alpha: 0.15)),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  _MobileIconLink(
-                    icon: Icons.email_outlined,
-                    url: 'mailto:mjkhan7124@gmail.com',
-                  ),
-                  const SizedBox(width: 24),
-                  _MobileIconLink(
-                    icon: Icons.code_rounded,
-                    url: 'https://github.com/Mj-Khan',
-                  ),
-                  const SizedBox(width: 24),
-                  _MobileIconLink(
-                    icon: Icons.work_outline_rounded,
-                    url: 'https://linkedin.com/in/abdul-mujeeb-khan',
-                  ),
-                  const Spacer(),
-                  AnimatedThemeSwitch(
-                    isDark: currentIsDark,
-                    onChanged: onToggleTheme,
-                  ),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
+              margin: const EdgeInsets.all(12), // Floating retro menu
+              decoration: BoxDecoration(
+                color: bgCol,
+                border: Border.all(color: borderCol, width: 4),
+                boxShadow: [
+                  BoxShadow(color: borderCol, offset: const Offset(6, 6)),
                 ],
               ),
-              const SizedBox(height: 8),
-            ],
-          ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '--- SYSTEM MENU ---',
+                    style: TextStyle(
+                      fontSize: 14,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.w800,
+                      color: currentIsDark
+                          ? AppColors.textMainDark
+                          : AppColors.textMainLight,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  ...navItems.map(
+                    (item) => GestureDetector(
+                      onTap: () {
+                        Navigator.pop(sheetContext);
+                        onNavTap(item.$2);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 12,
+                        ),
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: activeSection == item.$1
+                              ? accent.withValues(alpha: 0.15)
+                              : Colors.transparent,
+                          border: activeSection == item.$1
+                              ? Border.all(color: accent, width: 2)
+                              : Border.all(color: Colors.transparent, width: 2),
+                        ),
+                        child: Row(
+                          children: [
+                            if (activeSection == item.$1)
+                              Text(
+                                '> ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                  color: accent,
+                                ),
+                              )
+                            else
+                              const SizedBox(width: 18),
+                            Text(
+                              item.$1.toUpperCase(), // Retro terminal caps
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: activeSection == item.$1
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                                color: activeSection == item.$1
+                                    ? accent
+                                    : (currentIsDark
+                                          ? AppColors.textMainDark
+                                          : AppColors.textMainLight),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Container(height: 4, color: borderCol), // Retro divider
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      _MobileIconLink(
+                        icon: Icons.email_outlined,
+                        url: 'mailto:mjkhan7124@gmail.com',
+                        color: accent,
+                      ),
+                      const SizedBox(width: 24),
+                      _MobileIconLink(
+                        icon: Icons.code_rounded,
+                        url: 'https://github.com/Mj-Khan',
+                        color: accent,
+                      ),
+                      const SizedBox(width: 24),
+                      _MobileIconLink(
+                        icon: Icons.work_outline_rounded,
+                        url: 'https://linkedin.com/in/abdul-mujeeb-khan',
+                        color: accent,
+                      ),
+                      const Spacer(),
+                      AnimatedThemeSwitch(
+                        isDark: currentIsDark,
+                        onChanged: onToggleTheme,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            );
+          },
         );
       },
     );
@@ -160,28 +176,45 @@ class MobileTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
       decoration: BoxDecoration(
+        color: isDark ? AppColors.darkScaffold : AppColors.lightScaffold,
         border: Border(
-          bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.1)),
+          bottom: BorderSide(
+            color: borderCol,
+            width: 4,
+          ), // Chunky bottom border
         ),
       ),
       child: Row(
         children: [
-          const Text(
-            'Abdul Mujeeb',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          Text(
+            'ABDUL_MUJEEB',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+            ),
           ),
           const Spacer(),
           GestureDetector(
             onTap: () => _openDrawer(context),
             child: Container(
               padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border.all(color: borderCol, width: 2), // Boxy button
+              ),
               child: Icon(
                 Icons.menu_rounded,
                 size: 24,
-                color: Colors.grey.shade600,
+                color: isDark
+                    ? AppColors.textMainDark
+                    : AppColors.textMainLight,
               ),
             ),
           ),
@@ -194,8 +227,13 @@ class MobileTopBar extends StatelessWidget {
 class _MobileIconLink extends StatelessWidget {
   final IconData icon;
   final String url;
+  final Color color;
 
-  const _MobileIconLink({required this.icon, required this.url});
+  const _MobileIconLink({
+    required this.icon,
+    required this.url,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +242,13 @@ class _MobileIconLink extends StatelessWidget {
         final uri = Uri.parse(url);
         if (await canLaunchUrl(uri)) launchUrl(uri);
       },
-      child: Icon(icon, size: 22, color: Colors.grey.shade500),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          border: Border.all(color: color, width: 2), // Boxy social links
+        ),
+        child: Icon(icon, size: 22, color: color),
+      ),
     );
   }
 }

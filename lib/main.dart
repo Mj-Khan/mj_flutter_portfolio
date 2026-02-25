@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mj_flutter_portfolio/core/app_colors.dart';
 import 'package:mj_flutter_portfolio/screens/resume_home.dart';
 
@@ -24,13 +25,13 @@ class _ResumeAppState extends State<ResumeApp> {
       debugShowCheckedModeBanner: false,
       themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
-        fontFamily: 'Inter',
+        textTheme: GoogleFonts.vt323TextTheme(ThemeData.light().textTheme),
         brightness: Brightness.light,
         scaffoldBackgroundColor: AppColors.lightScaffold,
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
-        fontFamily: 'Inter',
+        textTheme: GoogleFonts.vt323TextTheme(ThemeData.dark().textTheme),
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.darkScaffold,
         useMaterial3: true,

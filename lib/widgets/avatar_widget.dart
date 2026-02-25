@@ -9,74 +9,56 @@ class AvatarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final c1 = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
-    final c2 = isDark ? AppColors.darkAccent2 : AppColors.lightAccent2;
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
 
-    return SizedBox(
+    return Container(
       width: size,
       height: size,
+      decoration: BoxDecoration(
+        color: c1, // background color
+        border: Border.all(color: borderCol, width: 3), // Chonky frame
+      ),
       child: CustomPaint(
-        painter: _AvatarPainter(color1: c1, color2: c2),
+        painter: _RetroAvatarPainter(
+          color: isDark ? AppColors.darkScaffold : AppColors.lightScaffold,
+        ),
       ),
     );
   }
 }
 
-class _AvatarPainter extends CustomPainter {
-  final Color color1;
-  final Color color2;
-  _AvatarPainter({required this.color1, required this.color2});
+class _RetroAvatarPainter extends CustomPainter {
+  final Color color;
+  _RetroAvatarPainter({required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final r = size.width / 2;
-    final center = Offset(r, r);
-
-    // Background circle
-    final bgPaint = Paint()
-      ..shader = RadialGradient(
-        colors: [color1, color2],
-        center: Alignment.topLeft,
-      ).createShader(Rect.fromCircle(center: center, radius: r));
-    canvas.drawCircle(center, r, bgPaint);
-
-    final personPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.92)
+    // Draw a blocky 8-bit style person
+    final paint = Paint()
+      ..color = color
       ..style = PaintingStyle.fill;
 
-    // Head
-    final headRadius = r * 0.30;
-    final headCenter = Offset(r, r * 0.72);
-    canvas.drawCircle(headCenter, headRadius, personPaint);
+    // Head (Square)
+    final headRect = Rect.fromLTWH(
+      size.width * 0.35,
+      size.height * 0.2,
+      size.width * 0.3,
+      size.height * 0.3,
+    );
+    canvas.drawRect(headRect, paint);
 
-    // Shoulders / body shape (clipped to circle)
-    final bodyPath = Path();
-    final bodyTop = headCenter.dy + headRadius * 0.7;
-    final bodyWidth = r * 0.80;
-    bodyPath.moveTo(center.dx - bodyWidth, size.height + 2);
-    bodyPath.quadraticBezierTo(
-      center.dx - bodyWidth * 0.5,
-      bodyTop,
-      center.dx,
-      bodyTop,
+    // Body (Rectangle with chopped corners)
+    final bodyRect = Rect.fromLTWH(
+      size.width * 0.2,
+      size.height * 0.55,
+      size.width * 0.6,
+      size.height * 0.45,
     );
-    bodyPath.quadraticBezierTo(
-      center.dx + bodyWidth * 0.5,
-      bodyTop,
-      center.dx + bodyWidth,
-      size.height + 2,
-    );
-    bodyPath.close();
-
-    // Clip body to the circle
-    canvas.save();
-    canvas.clipPath(
-      Path()..addOval(Rect.fromCircle(center: center, radius: r)),
-    );
-    canvas.drawPath(bodyPath, personPaint);
-    canvas.restore();
+    canvas.drawRect(bodyRect, paint);
   }
 
   @override
-  bool shouldRepaint(covariant _AvatarPainter old) =>
-      old.color1 != color1 || old.color2 != color2;
+  bool shouldRepaint(covariant _RetroAvatarPainter old) => old.color != color;
 }

@@ -18,17 +18,34 @@ class NavLink extends StatefulWidget {
   State<NavLink> createState() => _NavLinkState();
 }
 
-class _NavLinkState extends State<NavLink> {
+class _NavLinkState extends State<NavLink> with SingleTickerProviderStateMixin {
   bool _hovered = false;
+  late final AnimationController _blinkController;
+
+  @override
+  void initState() {
+    super.initState();
+    _blinkController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _blinkController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final color = widget.isActive
         ? widget.accentColor
         : _hovered
-        ? (isDark ? Colors.white70 : Colors.black87)
-        : Colors.grey.shade500;
+        ? (isDark ? Colors.white : Colors.black)
+        : Colors.grey.shade600;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -37,30 +54,49 @@ class _NavLinkState extends State<NavLink> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 13),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                width: widget.isActive ? 24 : 14,
-                height: 2,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(width: 16),
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 250),
+              // Retro blinker for active, static for hover
+              if (widget.isActive || _hovered)
+                widget.isActive
+                    ? AnimatedBuilder(
+                        animation: _blinkController,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _blinkController.value > 0.5 ? 1.0 : 0.0,
+                            child: child,
+                          );
+                        },
+                        child: Text(
+                          '> ',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            color: widget.accentColor,
+                          ),
+                        ),
+                      )
+                    : Text(
+                        '> ',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: color,
+                        ),
+                      )
+              else
+                const SizedBox(width: 18), // Spacer when inactive
+
+              Text(
+                widget.label,
                 style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 17,
+                  fontSize: 16,
                   fontWeight: widget.isActive
-                      ? FontWeight.w600
-                      : FontWeight.w400,
+                      ? FontWeight.w700
+                      : FontWeight.w500,
                   color: color,
                 ),
-                child: Text(widget.label),
               ),
             ],
           ),

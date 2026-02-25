@@ -33,6 +33,9 @@ class LeftRail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent1 = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
 
     final navItems = [
       ('About', heroKey),
@@ -46,8 +49,9 @@ class LeftRail extends StatelessWidget {
       width: 320,
       padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 56),
       decoration: BoxDecoration(
+        color: isDark ? AppColors.darkScaffold : AppColors.lightScaffold,
         border: Border(
-          right: BorderSide(color: AppColors.textMuted.withValues(alpha: 0.2)),
+          right: BorderSide(color: borderCol, width: 4), // Chunky boundary
         ),
       ),
       child: Column(
@@ -60,59 +64,74 @@ class LeftRail extends StatelessWidget {
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    PortfolioContent.displayName,
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                    PortfolioContent.displayName.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: isDark
+                          ? AppColors.textMainDark
+                          : AppColors.textMainLight,
+                    ),
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     PortfolioContent.role,
-                    style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textMuted,
+                    ),
                   ),
                 ],
               ),
             ],
           ),
 
-          const SizedBox(height: 48),
+          const SizedBox(height: 60),
 
           // ── Navigation ──
-          const Text(
-            'NAVIGATION',
+          Text(
+            '[ NAVIGATION ]',
             style: TextStyle(
               fontSize: 12,
               letterSpacing: 2.5,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textMuted,
+              fontWeight: FontWeight.w800,
+              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           ...navItems.map(
             (item) => NavLink(
-              label: item.$1,
+              label: item.$1.toUpperCase(),
               isActive: activeSection == item.$1,
               accentColor: accent1,
               onTap: () => onNavTap(item.$2),
             ),
           ),
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 60),
 
           // ── Connect ──
-          const Text(
-            'CONNECT',
+          Text(
+            '[ CONNECT ]',
             style: TextStyle(
               fontSize: 12,
               letterSpacing: 2.5,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textMuted,
+              fontWeight: FontWeight.w800,
+              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           ...PortfolioContent.socialLinks.expand(
             (s) => [
-              SocialLink(icon: s.icon, label: s.label, url: s.url),
-              const SizedBox(height: 14),
+              SocialLink(
+                icon: s.icon,
+                label: s.label.toUpperCase(),
+                url: s.url,
+                accentColor: accent1,
+              ),
+              const SizedBox(height: 12),
             ],
           ),
 
@@ -121,13 +140,11 @@ class LeftRail extends StatelessWidget {
           // ── Theme Switch ──
           Row(
             children: [
-              Icon(
-                isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
-                size: 18,
-                color: AppColors.textMuted,
-              ),
-              const SizedBox(width: 14),
+              Icon(Icons.light_mode, size: 18, color: AppColors.textMuted),
+              const SizedBox(width: 12),
               AnimatedThemeSwitch(isDark: isDark, onChanged: onToggleTheme),
+              const SizedBox(width: 12),
+              Icon(Icons.dark_mode, size: 18, color: AppColors.textMuted),
             ],
           ),
         ],

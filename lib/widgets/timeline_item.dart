@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'glass_card.dart';
+import '../core/app_colors.dart';
+import 'glass_card.dart'; // RetroContainer alias
 
 class TimelineItem extends StatelessWidget {
   final String year;
@@ -17,12 +18,35 @@ class TimelineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accent = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 160,
-          child: Text(year, style: TextStyle(color: Colors.grey.shade500)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                year,
+                style: TextStyle(
+                  color: isDark
+                      ? AppColors.textMainDark
+                      : AppColors.textMainLight,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: 40,
+                height: 4,
+                color: accent, // Chunky year separator
+              ),
+            ],
+          ),
         ),
         const SizedBox(width: 40),
         Expanded(
@@ -33,14 +57,17 @@ class TimelineItem extends StatelessWidget {
                 Text(
                   company,
                   style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(role, style: TextStyle(color: Colors.grey.shade500)),
+                const SizedBox(height: 8),
+                Text(
+                  '> $role',
+                  style: TextStyle(color: accent, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 16),
-                Text(description),
+                Text(description, style: const TextStyle(height: 1.6)),
               ],
             ),
           ),

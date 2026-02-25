@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../core/app_colors.dart';
 
 class CtaButton extends StatefulWidget {
   final String label;
@@ -33,19 +34,17 @@ class _CtaButtonState extends State<CtaButton> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final bg = widget.filled
-        ? widget.accent.withValues(alpha: _hovered ? 1.0 : 0.85)
-        : Colors.transparent;
+    final borderCol = isDark
+        ? AppColors.retroBorderDark
+        : AppColors.retroBorderLight;
 
-    final border = widget.filled
-        ? Colors.transparent
-        : widget.accent.withValues(alpha: _hovered ? 0.7 : 0.35);
+    final bg = widget.filled
+        ? widget.accent
+        : (isDark ? AppColors.retroBgDark : AppColors.retroBgLight);
 
     final textColor = widget.filled
-        ? Colors.white
-        : _hovered
-        ? widget.accent
-        : (isDark ? Colors.white70 : Colors.black87);
+        ? (isDark ? AppColors.darkScaffold : AppColors.lightScaffold)
+        : widget.accent;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -54,24 +53,33 @@ class _CtaButtonState extends State<CtaButton> {
       child: GestureDetector(
         onTap: _launch,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 100), // Snap hover
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
           decoration: BoxDecoration(
-            color: bg,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: border, width: 1.5),
+            color: _hovered ? widget.accent : bg,
+            border: Border.all(color: borderCol, width: 3),
+            boxShadow: [
+              BoxShadow(
+                color: borderCol,
+                offset: _hovered ? const Offset(8, 8) : const Offset(4, 4),
+              ),
+            ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(widget.icon, size: 18, color: textColor),
-              const SizedBox(width: 10),
+              Icon(
+                widget.icon,
+                size: 20,
+                color: _hovered ? AppColors.darkScaffold : textColor,
+              ),
+              const SizedBox(width: 12),
               Text(
-                widget.label,
+                widget.label.toUpperCase(), // Retro caps
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: _hovered ? AppColors.darkScaffold : textColor,
                 ),
               ),
             ],
