@@ -17,7 +17,7 @@ class ResumeApp extends StatefulWidget {
 }
 
 class _ResumeAppState extends State<ResumeApp> {
-  bool isDark = false;
+  bool isDark = true;
 
   @override
   Widget build(BuildContext context) {
