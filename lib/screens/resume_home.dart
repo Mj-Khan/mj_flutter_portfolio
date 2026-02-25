@@ -9,6 +9,7 @@ import '../widgets/experience_section.dart';
 import '../widgets/projects_section.dart';
 import '../widgets/contact_section.dart';
 import '../widgets/background_blobs.dart'; // Which is actually now RetroBackground
+import '../widgets/crt_effect.dart';
 
 class ResumeHome extends StatefulWidget {
   final bool isDark;
@@ -140,139 +141,141 @@ class _ResumeHomeState extends State<ResumeHome> with TickerProviderStateMixin {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 1000;
 
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: widget.isDark
-                ? AppColors.retroBorderDark
-                : AppColors.retroBorderLight,
-            width: 8, // Chonky global frame
-          ),
-        ),
-        child: Stack(
-          children: [
-            RetroBackground(controller: _blobController),
-            Column(
-              children: [
-                // Mobile-only top bar
-                if (!isDesktop)
-                  MobileTopBar(
-                    isDark: widget.isDark,
-                    onToggleTheme: widget.onToggleTheme,
-                    activeSection: _activeSection,
-                    onNavTap: (key) => _scrollToSection(key),
-                    heroKey: _heroKey,
-                    expertiseKey: _expertiseKey,
-                    experienceKey: _experienceKey,
-                    projectsKey: _projectsKey,
-                    contactKey: _contactKey,
-                  ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      if (isDesktop)
-                        SlideTransition(
-                          position: _railSlide,
-                          child: FadeTransition(
-                            opacity: _railFade,
-                            child: LeftRail(
-                              isDark: widget.isDark,
-                              onToggleTheme: widget.onToggleTheme,
-                              activeSection: _activeSection,
-                              onNavTap: (key) => _scrollToSection(key),
-                              heroKey: _heroKey,
-                              expertiseKey: _expertiseKey,
-                              experienceKey: _experienceKey,
-                              projectsKey: _projectsKey,
-                              contactKey: _contactKey,
-                            ),
-                          ),
-                        ),
-                      Expanded(
-                        child: FadeTransition(
-                          opacity: _contentFade,
-                          child: SlideTransition(
-                            position: _contentSlide,
-                            child: SingleChildScrollView(
-                              controller: _scrollController,
-                              padding: EdgeInsets.only(
-                                left: isDesktop ? 80 : 32,
-                                right: isDesktop ? 120 : 32,
-                                top: isDesktop ? 80 : 40,
-                                bottom: 0,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  RevealOnScroll(
-                                    scrollController: _scrollController,
-                                    delay: Duration.zero,
-                                    child: SizedBox(
-                                      key: _heroKey,
-                                      child: HeroSection(
-                                        accent1: accent1,
-                                        accent2: accent2,
-                                        isDesktop: isDesktop,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 120),
-                                  RevealOnScroll(
-                                    scrollController: _scrollController,
-                                    delay: const Duration(milliseconds: 100),
-                                    child: SizedBox(
-                                      key: _expertiseKey,
-                                      child: ExpertiseSection(
-                                        isDesktop: isDesktop,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 120),
-                                  RevealOnScroll(
-                                    scrollController: _scrollController,
-                                    delay: const Duration(milliseconds: 200),
-                                    child: SizedBox(
-                                      key: _experienceKey,
-                                      child: const ExperienceSection(),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 120),
-                                  RevealOnScroll(
-                                    scrollController: _scrollController,
-                                    delay: const Duration(milliseconds: 300),
-                                    child: SizedBox(
-                                      key: _projectsKey,
-                                      child: ProjectsSection(
-                                        isDesktop: isDesktop,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 120),
-                                  RevealOnScroll(
-                                    scrollController: _scrollController,
-                                    delay: const Duration(milliseconds: 200),
-                                    child: SizedBox(
-                                      key: _contactKey,
-                                      child: ContactSection(
-                                        accent1: accent1,
-                                        accent2: accent2,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 80),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+    return CrtEffect(
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: widget.isDark
+                  ? AppColors.retroBorderDark
+                  : AppColors.retroBorderLight,
+              width: 8, // Chonky global frame
             ),
-          ],
+          ),
+          child: Stack(
+            children: [
+              RetroBackground(controller: _blobController),
+              Column(
+                children: [
+                  // Mobile-only top bar
+                  if (!isDesktop)
+                    MobileTopBar(
+                      isDark: widget.isDark,
+                      onToggleTheme: widget.onToggleTheme,
+                      activeSection: _activeSection,
+                      onNavTap: (key) => _scrollToSection(key),
+                      heroKey: _heroKey,
+                      expertiseKey: _expertiseKey,
+                      experienceKey: _experienceKey,
+                      projectsKey: _projectsKey,
+                      contactKey: _contactKey,
+                    ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        if (isDesktop)
+                          SlideTransition(
+                            position: _railSlide,
+                            child: FadeTransition(
+                              opacity: _railFade,
+                              child: LeftRail(
+                                isDark: widget.isDark,
+                                onToggleTheme: widget.onToggleTheme,
+                                activeSection: _activeSection,
+                                onNavTap: (key) => _scrollToSection(key),
+                                heroKey: _heroKey,
+                                expertiseKey: _expertiseKey,
+                                experienceKey: _experienceKey,
+                                projectsKey: _projectsKey,
+                                contactKey: _contactKey,
+                              ),
+                            ),
+                          ),
+                        Expanded(
+                          child: FadeTransition(
+                            opacity: _contentFade,
+                            child: SlideTransition(
+                              position: _contentSlide,
+                              child: SingleChildScrollView(
+                                controller: _scrollController,
+                                padding: EdgeInsets.only(
+                                  left: isDesktop ? 80 : 32,
+                                  right: isDesktop ? 120 : 32,
+                                  top: isDesktop ? 80 : 40,
+                                  bottom: 0,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    RevealOnScroll(
+                                      scrollController: _scrollController,
+                                      delay: Duration.zero,
+                                      child: SizedBox(
+                                        key: _heroKey,
+                                        child: HeroSection(
+                                          accent1: accent1,
+                                          accent2: accent2,
+                                          isDesktop: isDesktop,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 120),
+                                    RevealOnScroll(
+                                      scrollController: _scrollController,
+                                      delay: const Duration(milliseconds: 100),
+                                      child: SizedBox(
+                                        key: _expertiseKey,
+                                        child: ExpertiseSection(
+                                          isDesktop: isDesktop,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 120),
+                                    RevealOnScroll(
+                                      scrollController: _scrollController,
+                                      delay: const Duration(milliseconds: 200),
+                                      child: SizedBox(
+                                        key: _experienceKey,
+                                        child: const ExperienceSection(),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 120),
+                                    RevealOnScroll(
+                                      scrollController: _scrollController,
+                                      delay: const Duration(milliseconds: 300),
+                                      child: SizedBox(
+                                        key: _projectsKey,
+                                        child: ProjectsSection(
+                                          isDesktop: isDesktop,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 120),
+                                    RevealOnScroll(
+                                      scrollController: _scrollController,
+                                      delay: const Duration(milliseconds: 200),
+                                      child: SizedBox(
+                                        key: _contactKey,
+                                        child: ContactSection(
+                                          accent1: accent1,
+                                          accent2: accent2,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 80),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

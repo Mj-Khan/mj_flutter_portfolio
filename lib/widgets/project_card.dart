@@ -46,18 +46,56 @@ class _ProjectCardState extends State<ProjectCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(p.icon, size: 36, color: accent),
-            const SizedBox(height: 24),
-            Text(
-              p.title,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '[ FILE ${p.title.hashCode % 100} ]', // Fake save slot numbering
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: isDark
+                        ? AppColors.neoYellow
+                        : AppColors.lightAccent2,
+                  ),
+                ),
+                Text(
+                  '99:99:99', // Fake playtime
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: isDark
+                        ? AppColors.textMainDark
+                        : AppColors.textMainLight,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
+            Container(height: 2, color: borderCol),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Icon(p.icon, size: 36, color: accent),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    p.title.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
             Text(
-              p.tagline,
+              '> ${p.tagline.toUpperCase()}',
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
                 color: accent,
               ),
             ),

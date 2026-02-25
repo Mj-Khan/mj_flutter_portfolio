@@ -73,11 +73,12 @@ class ExpertiseSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    '> Technologies & tools I work with_', // Blinking cursor style
+                    '[ UNLOCKED SKILL TREES ]', // Gamified title
                     style: TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w800,
                       color: accent,
+                      letterSpacing: 1.5,
                       height: 1.5,
                     ),
                   ),
@@ -160,15 +161,42 @@ class _SkillCategoryCard extends StatelessWidget {
                       : AppColors.lightScaffold,
                   border: Border.all(color: borderCol, width: 2), // Boxy chips
                 ),
-                child: Text(
-                  skill,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: isDark
-                        ? AppColors.textMainDark
-                        : AppColors.textMainLight,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      skill,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.textMainDark
+                            : AppColors.textMainLight,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Lv.99 ',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: accent,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Container(
+                          width: 30,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: accent,
+                            border: Border.all(color: borderCol, width: 1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               );
             }).toList(),

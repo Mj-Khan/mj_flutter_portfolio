@@ -60,25 +60,35 @@ class _HeroText extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '> ${PortfolioContent.heroLabel.toUpperCase()}',
-          style: TextStyle(
-            fontSize: 14,
-            letterSpacing: 3,
-            fontWeight: FontWeight.w800,
-            color: a1, // Neon terminal green/accent
-          ),
-        ),
-        const SizedBox(height: 24),
         RetroText(
-          PortfolioContent.heroHeadline,
+          '[ PLAYER: ${PortfolioContent.heroHeadline.toUpperCase()} ]',
           style: const TextStyle(
-            fontSize: 64,
+            fontSize: 48,
             height: 1.1,
             fontWeight: FontWeight.w900,
           ),
           color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-          shadowColor: a1, // High contrast trailing shadow
+          shadowColor: a1,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          '[ CLASS: ${PortfolioContent.heroLabel.toUpperCase()} | LVL: 99 ]',
+          style: TextStyle(
+            fontSize: 20,
+            letterSpacing: 2,
+            fontWeight: FontWeight.w800,
+            color: a1,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '[ HP: 999/999  MP: 100/100 ]',
+          style: TextStyle(
+            fontSize: 18,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.w800,
+            color: isDark ? AppColors.neoMagenta : AppColors.lightAccent2,
+          ),
         ),
         const SizedBox(height: 40),
         Text(
@@ -89,7 +99,7 @@ class _HeroText extends StatelessWidget {
             color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
           ),
         ),
-        const SizedBox(height: 40),
+        const SizedBox(height: 48),
         Wrap(
           spacing: 40,
           runSpacing: 20,
@@ -217,24 +227,49 @@ class _Metric extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // Convert the normal label into an RPG stat label
+    String rpgLabel = label.toUpperCase();
+    if (rpgLabel.contains('EXP') || rpgLabel.contains('YEARS')) {
+      rpgLabel = 'EXP GAINED';
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.neoMagenta : AppColors.lightAccent2,
-          ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              'PT: ',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: isDark
+                    ? AppColors.textMainDark
+                    : AppColors.textMainLight,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+                color: isDark
+                    ? AppColors.neoYellow
+                    : AppColors.neoCyan, // Gameboy colors
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 4),
         Text(
-          label.toUpperCase(),
+          rpgLabel,
           style: TextStyle(
-            color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+            color: isDark ? AppColors.textSub : AppColors.textMuted,
             fontWeight: FontWeight.w600,
             letterSpacing: 1,
+            fontSize: 14,
           ),
         ),
       ],

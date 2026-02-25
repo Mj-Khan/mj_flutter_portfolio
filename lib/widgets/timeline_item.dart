@@ -30,20 +30,30 @@ class TimelineItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                year,
+                'STAGE:\n$year',
                 style: TextStyle(
                   color: isDark
                       ? AppColors.textMainDark
                       : AppColors.textMainLight,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                  letterSpacing: 1.5,
+                  height: 1.4,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               Container(
                 width: 40,
                 height: 4,
-                color: accent, // Chunky year separator
+                decoration: BoxDecoration(
+                  color: accent,
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.retroBorderDark
+                        : AppColors.retroBorderLight,
+                    width: 1,
+                  ),
+                ),
               ),
             ],
           ),
@@ -55,16 +65,23 @@ class TimelineItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  company,
-                  style: const TextStyle(
+                  'QUEST: ${company.toUpperCase()}',
+                  style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w900,
+                    color: isDark
+                        ? AppColors.neoYellow
+                        : AppColors.lightAccent2,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '> $role',
-                  style: TextStyle(color: accent, fontWeight: FontWeight.w600),
+                  'ROLE: ${role.toUpperCase()}',
+                  style: TextStyle(
+                    color: accent,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(description, style: const TextStyle(height: 1.6)),

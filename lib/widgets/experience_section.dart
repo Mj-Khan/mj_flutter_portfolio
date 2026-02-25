@@ -15,11 +15,12 @@ class ExperienceSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '> ${PortfolioContent.experienceTitle.toUpperCase()}_',
+          '[ QUEST LOG ]',
           style: TextStyle(
-            fontSize: 36,
+            fontSize: 28,
             fontWeight: FontWeight.w900,
             color: color,
+            letterSpacing: 2.0,
           ),
         ),
         const SizedBox(height: 60),

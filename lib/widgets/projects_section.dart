@@ -16,11 +16,12 @@ class ProjectsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '> ${PortfolioContent.projectsTitle.toUpperCase()}_',
+          '[ SAVE DATA ]',
           style: TextStyle(
-            fontSize: 36,
+            fontSize: 28,
             fontWeight: FontWeight.w900,
             color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+            letterSpacing: 2.0,
           ),
         ),
         const SizedBox(height: 60),
