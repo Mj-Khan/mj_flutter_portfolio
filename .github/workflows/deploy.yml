@@ -1,0 +1,71 @@
+name: Production Build & Deploy
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ main ] # Trigger on every push or merge to the main branch
+  workflow_dispatch:   # Allows you to manually trigger this run from the Actions tab
+
+# Permissions required for GitHub Pages deployment
+permissions:
+  contents: read      # Read access to the repository code
+  pages: write         # Write access to host the files on GitHub Pages
+  id-token: write      # Required for secure authentication with GitHub's hosting service
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    # Environment variables used throughout the job
+    env:
+      # If you use a custom domain, change this to "/"
+      # This variable ensures images and fonts load from the correct sub-folder
+      BASE_HREF: "/${{ github.event.repository.name }}/"
+
+    steps:
+      # 1. Pull the code from your repository into the runner
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Set up the Flutter environment
+      # Using 'cache: true' significantly speeds up subsequent runs by storing the SDK
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 3. Download all packages listed in your pubspec.yaml
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # 4. Static analysis (The 'Industry Standard' gatekeeper)
+      # This ensures you don't deploy code with syntax errors or linting warnings
+      - name: Verify Code Quality
+        run: flutter analyze
+
+      # 5. Compile the Flutter Web Application
+      # --release: Minifies code and removes debugging overhead
+      # --wasm: Compiles to WebAssembly for near-native web performance (the 2026 standard)
+      # --base-href: Corrects asset paths for GitHub Pages sub-folders
+      - name: Build Web Application
+        run: |
+          flutter build web --release --wasm --base-href "$BASE_HREF"
+
+      # 6. The "Deep Linking" Fix
+      # Because Flutter is a Single Page App, refreshing /about results in a 404.
+      # Copying index.html to 404.html tells GitHub to let Flutter handle the route.
+      - name: Configure Routing for SPAs
+        run: cp build/web/index.html build/web/404.html
+
+      # 7. Prepare the 'build/web' folder to be sent to GitHub's hosting servers
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+      # 8. Final Deployment
+      # This moves the uploaded artifact to the live GitHub Pages environment
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
