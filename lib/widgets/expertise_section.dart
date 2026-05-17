@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
-import '../portfolio_content.dart';
+import '../core/icon_resolver.dart';
+import '../data/app_data.dart';
+import '../models/skill.dart';
 import 'glass_card.dart';
 
 class ExpertiseSection extends StatelessWidget {
@@ -13,13 +15,17 @@ class ExpertiseSection extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
     final accent2 = isDark ? AppColors.darkAccent2 : AppColors.lightAccent2;
-    final cats = PortfolioContent.skillCategories;
+
+    final appData = AppData.of(context);
+    final cats = appData.content.skills;
+    final iconMap = appData.siteConfig.config.iconMap.skillCategories;
 
     // On desktop: 2-column grid; on mobile: single column
     final rows = <Widget>[];
     for (int i = 0; i < cats.length; i += (isDesktop ? 2 : 1)) {
       final left = cats[i];
-      final right = (isDesktop && i + 1 < cats.length) ? cats[i + 1] : null;
+      final right =
+          (isDesktop && i + 1 < cats.length) ? cats[i + 1] : null;
       rows.add(
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,6 +33,7 @@ class ExpertiseSection extends StatelessWidget {
             Expanded(
               child: _SkillCategoryCard(
                 cat: left,
+                iconName: iconMap[left.name] ?? 'code_rounded',
                 accent: accent,
                 accent2: accent2,
                 isDark: isDark,
@@ -37,6 +44,7 @@ class ExpertiseSection extends StatelessWidget {
               Expanded(
                 child: _SkillCategoryCard(
                   cat: right,
+                  iconName: iconMap[right.name] ?? 'code_rounded',
                   accent: accent,
                   accent2: accent2,
                   isDark: isDark,
@@ -62,7 +70,7 @@ class ExpertiseSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    PortfolioContent.expertiseTitle,
+                    'Skills & Expertise',
                     style: TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 8),
@@ -88,12 +96,14 @@ class ExpertiseSection extends StatelessWidget {
 
 class _SkillCategoryCard extends StatelessWidget {
   final SkillCategory cat;
+  final String iconName;
   final Color accent;
   final Color accent2;
   final bool isDark;
 
   const _SkillCategoryCard({
     required this.cat,
+    required this.iconName,
     required this.accent,
     required this.accent2,
     required this.isDark,
@@ -105,7 +115,6 @@ class _SkillCategoryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Category header
           Row(
             children: [
               Container(
@@ -115,7 +124,11 @@ class _SkillCategoryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   color: accent.withValues(alpha: 0.14),
                 ),
-                child: Icon(cat.icon, color: accent, size: 18),
+                child: Icon(
+                  iconFromName(iconName),
+                  color: accent,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -131,7 +144,6 @@ class _SkillCategoryCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          // Skill chips
           Wrap(
             spacing: 8,
             runSpacing: 8,

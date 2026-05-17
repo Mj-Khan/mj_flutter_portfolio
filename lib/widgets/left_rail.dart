@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
 import '../core/animations.dart';
-import '../portfolio_content.dart' hide SocialLink;
+import '../core/icon_resolver.dart';
+import '../data/app_data.dart';
 import 'avatar_widget.dart';
 import 'nav_link.dart';
-import 'social_link.dart';
+import 'social_link.dart' as sl;
 
 class LeftRail extends StatelessWidget {
   final bool isDark;
@@ -34,12 +35,35 @@ class LeftRail extends StatelessWidget {
   Widget build(BuildContext context) {
     final accent1 = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
 
+    final appData = AppData.of(context);
+    final profile = appData.content.profile;
+    final socialIconMap = appData.siteConfig.config.socialIconMap;
+
     final navItems = [
       ('About', heroKey),
       ('Expertise', expertiseKey),
       ('Experience', experienceKey),
       ('Projects', projectsKey),
       ('Contact', contactKey),
+    ];
+
+    // Build social links from Profile URLs + SiteConfig icon mappings
+    final socialLinks = [
+      (
+        icon: iconFromName(socialIconMap['email'] ?? 'email_outlined'),
+        label: profile.email,
+        url: profile.emailUrl,
+      ),
+      (
+        icon: iconFromName(socialIconMap['github'] ?? 'code_rounded'),
+        label: profile.githubLabel,
+        url: profile.githubUrl,
+      ),
+      (
+        icon: iconFromName(socialIconMap['linkedin'] ?? 'work_outline_rounded'),
+        label: profile.linkedInLabel,
+        url: profile.linkedInUrl,
+      ),
     ];
 
     return Container(
@@ -60,14 +84,20 @@ class LeftRail extends StatelessWidget {
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    PortfolioContent.displayName,
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                    profile.displayName,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Text(
-                    PortfolioContent.role,
-                    style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                    profile.role,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textMuted,
+                    ),
                   ),
                 ],
               ),
@@ -109,9 +139,9 @@ class LeftRail extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          ...PortfolioContent.socialLinks.expand(
+          ...socialLinks.expand(
             (s) => [
-              SocialLink(icon: s.icon, label: s.label, url: s.url),
+              sl.SocialLink(icon: s.icon, label: s.label, url: s.url),
               const SizedBox(height: 14),
             ],
           ),

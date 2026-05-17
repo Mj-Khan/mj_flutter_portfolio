@@ -1,0 +1,59 @@
+{
+  "hero": {
+    "label": "MOBILE ENGINEER",
+    "headline": "Building Production-\nGrade Mobile Systems",
+    "bio": "Flutter-focused engineer delivering scalable architectures, clean state management, and real-world deployments.",
+    "metrics": [
+      { "value": "6 Apps",               "label": "Production Deployments" },
+      { "value": "BLoC + GetX + Riverpod","label": "Scalable Architecture"  },
+      { "value": "CI/CD",                 "label": "Automated Builds"        }
+    ]
+  },
+
+  "focus": {
+    "areasTitle": "Focus Areas",
+    "availabilityLabel": "Open to Work",
+    "areas": [
+      { "icon": "speed_rounded",           "label": "Performance Optimization"    },
+      { "icon": "account_tree_outlined",   "label": "State Management Systems"    },
+      { "icon": "cloud_outlined",          "label": "API Integration & Services"  },
+      { "icon": "devices_outlined",        "label": "Cross-Platform Architecture" }
+    ]
+  },
+
+  "contactFooter": {
+    "headline": "Let's Build\nSomething Together",
+    "subtext": "Open to full-time roles, freelance projects, and interesting collabs.",
+    "copyright": "Built with Flutter"
+  },
+
+  "navSections": ["About", "Expertise", "Experience", "Projects", "Contact"],
+
+  "socialIconMap": {
+    "email":    "email_outlined",
+    "github":   "code_rounded",
+    "linkedin": "work_outline_rounded"
+  },
+
+  "iconMap": {
+    "projects": {
+      "svarupa":            "auto_awesome_outlined",
+      "trailer-analytics":  "bar_chart_outlined",
+      "vhub-inspection":    "camera_alt_outlined",
+      "zetsim":             "sim_card_outlined",
+      "split-ev":           "electric_car_outlined",
+      "super-construct":    "construction_outlined",
+      "falek-tayyeb":       "mosque_outlined",
+      "inspire-aba":        "school_outlined",
+      "feet-first":         "directions_walk_outlined",
+      "magic-shake":        "touch_app_outlined"
+    },
+    "skill_categories": {
+      "Core":                          "code_rounded",
+      "Backend & APIs":                "cloud_outlined",
+      "Maps, Vehicle & Monitoring":    "map_outlined",
+      "Tools":                         "build_outlined",
+      "Currently Learning":            "school_outlined"
+    }
+  }
+}

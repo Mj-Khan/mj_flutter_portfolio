@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../core/app_colors.dart';
 import '../core/animations.dart';
+import '../core/icon_resolver.dart';
+import '../data/app_data.dart';
 
 class MobileTopBar extends StatelessWidget {
   final bool isDark;
@@ -36,6 +38,26 @@ class MobileTopBar extends StatelessWidget {
       ('Contact', contactKey),
     ];
 
+    // Read profile + icon map from AppData
+    final appData = AppData.of(context);
+    final profile = appData.content.profile;
+    final socialIconMap = appData.siteConfig.config.socialIconMap;
+
+    final socialLinks = [
+      (
+        icon: iconFromName(socialIconMap['email'] ?? 'email_outlined'),
+        url: profile.emailUrl,
+      ),
+      (
+        icon: iconFromName(socialIconMap['github'] ?? 'code_rounded'),
+        url: profile.githubUrl,
+      ),
+      (
+        icon: iconFromName(socialIconMap['linkedin'] ?? 'work_outline_rounded'),
+        url: profile.linkedInUrl,
+      ),
+    ];
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -43,9 +65,8 @@ class MobileTopBar extends StatelessWidget {
       builder: (sheetContext) {
         final currentIsDark =
             Theme.of(sheetContext).brightness == Brightness.dark;
-        final accent1 = currentIsDark
-            ? AppColors.darkAccent1
-            : AppColors.lightAccent1;
+        final accent1 =
+            currentIsDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
 
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
@@ -53,7 +74,8 @@ class MobileTopBar extends StatelessWidget {
             color: currentIsDark
                 ? AppColors.darkScaffold
                 : AppColors.lightScaffold,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            borderRadius:
+                const BorderRadius.vertical(top: Radius.circular(28)),
             border: Border.all(
               color: currentIsDark
                   ? Colors.white.withValues(alpha: 0.08)
@@ -129,19 +151,11 @@ class MobileTopBar extends StatelessWidget {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  _MobileIconLink(
-                    icon: Icons.email_outlined,
-                    url: 'mailto:mjkhan7124@gmail.com',
-                  ),
-                  const SizedBox(width: 24),
-                  _MobileIconLink(
-                    icon: Icons.code_rounded,
-                    url: 'https://github.com/Mj-Khan',
-                  ),
-                  const SizedBox(width: 24),
-                  _MobileIconLink(
-                    icon: Icons.work_outline_rounded,
-                    url: 'https://linkedin.com/in/abdul-mujeeb-khan',
+                  ...socialLinks.map(
+                    (s) => Padding(
+                      padding: const EdgeInsets.only(right: 24),
+                      child: _MobileIconLink(icon: s.icon, url: s.url),
+                    ),
                   ),
                   const Spacer(),
                   AnimatedThemeSwitch(
@@ -160,6 +174,8 @@ class MobileTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final profile = AppData.of(context).content.profile;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
       decoration: BoxDecoration(
@@ -169,9 +185,9 @@ class MobileTopBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Text(
-            'Abdul Mujeeb',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          Text(
+            profile.displayName,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const Spacer(),
           GestureDetector(

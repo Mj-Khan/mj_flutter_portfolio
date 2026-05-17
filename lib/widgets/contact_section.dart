@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
-import '../portfolio_content.dart';
+import '../core/icon_resolver.dart';
+import '../data/app_data.dart';
 import 'gradient_text.dart';
 import 'cta_button.dart';
 
@@ -16,6 +17,15 @@ class ContactSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appData = AppData.of(context);
+    final footer = appData.siteConfig.config.contactFooter;
+    final socialIconMap = appData.siteConfig.config.socialIconMap;
+    final profile = appData.content.profile;
+
+    // Build the copyright line at runtime so the year stays current.
+    final copyrightLine =
+        '© ${DateTime.now().year} ${profile.fullName} · ${footer.copyright}';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,7 +42,7 @@ class ContactSection extends StatelessWidget {
         ),
         const SizedBox(height: 80),
         GradientText(
-          PortfolioContent.contactHeadline,
+          footer.headline,
           style: const TextStyle(
             fontSize: 52,
             height: 1.15,
@@ -41,9 +51,9 @@ class ContactSection extends StatelessWidget {
           colors: [accent1, accent2],
         ),
         const SizedBox(height: 24),
-        const Text(
-          PortfolioContent.contactSubtext,
-          style: TextStyle(fontSize: 17, height: 1.8),
+        Text(
+          footer.subtext,
+          style: const TextStyle(fontSize: 17, height: 1.8),
         ),
         const SizedBox(height: 48),
         Wrap(
@@ -52,22 +62,23 @@ class ContactSection extends StatelessWidget {
           children: [
             CtaButton(
               label: 'Send an Email',
-              icon: Icons.email_outlined,
-              url: PortfolioContent.emailUrl,
+              icon: iconFromName(socialIconMap['email'] ?? 'email_outlined'),
+              url: profile.emailUrl,
               filled: true,
               accent: accent1,
             ),
             CtaButton(
               label: 'GitHub',
-              icon: Icons.code_rounded,
-              url: PortfolioContent.githubUrl,
+              icon: iconFromName(socialIconMap['github'] ?? 'code_rounded'),
+              url: profile.githubUrl,
               filled: false,
               accent: accent1,
             ),
             CtaButton(
               label: 'LinkedIn',
-              icon: Icons.work_outline_rounded,
-              url: PortfolioContent.linkedInUrl,
+              icon: iconFromName(
+                  socialIconMap['linkedin'] ?? 'work_outline_rounded'),
+              url: profile.linkedInUrl,
               filled: false,
               accent: accent1,
             ),
@@ -75,7 +86,7 @@ class ContactSection extends StatelessWidget {
         ),
         const SizedBox(height: 80),
         Text(
-          PortfolioContent.copyrightLine,
+          copyrightLine,
           style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
         ),
       ],

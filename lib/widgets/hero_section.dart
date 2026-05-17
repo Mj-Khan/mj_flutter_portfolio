@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app_colors.dart';
-import '../portfolio_content.dart';
+import '../core/icon_resolver.dart';
+import '../data/app_data.dart';
 import 'gradient_text.dart';
 import 'glass_card.dart';
 
@@ -21,7 +22,6 @@ class HeroSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final wide = constraints.maxWidth > 900;
-
         return wide
             ? Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +31,7 @@ class HeroSection extends StatelessWidget {
                     child: _HeroText(a1: accent1, a2: accent2),
                   ),
                   const SizedBox(width: 80),
-                  Expanded(flex: 1, child: const _HeroSideCard()),
+                  const Expanded(flex: 1, child: _HeroSideCard()),
                 ],
               )
             : Column(
@@ -55,11 +55,13 @@ class _HeroText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hero = AppData.of(context).siteConfig.config.hero;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          PortfolioContent.heroLabel,
+          hero.label,
           style: const TextStyle(
             fontSize: 12,
             letterSpacing: 3,
@@ -69,7 +71,7 @@ class _HeroText extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         GradientText(
-          PortfolioContent.heroHeadline,
+          hero.headline,
           style: const TextStyle(
             fontSize: 64,
             height: 1.1,
@@ -78,15 +80,15 @@ class _HeroText extends StatelessWidget {
           colors: [a1, a2],
         ),
         const SizedBox(height: 40),
-        const Text(
-          PortfolioContent.heroBio,
-          style: TextStyle(fontSize: 18, height: 1.8),
+        Text(
+          hero.bio,
+          style: const TextStyle(fontSize: 18, height: 1.8),
         ),
         const SizedBox(height: 40),
         Wrap(
           spacing: 40,
           runSpacing: 20,
-          children: PortfolioContent.metrics
+          children: hero.metrics
               .map((m) => _Metric(m.value, m.label))
               .toList(),
         ),
@@ -102,6 +104,7 @@ class _HeroSideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? AppColors.darkAccent1 : AppColors.lightAccent1;
+    final focus = AppData.of(context).siteConfig.config.focus;
 
     return GlassCard(
       child: Column(
@@ -111,7 +114,7 @@ class _HeroSideCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  PortfolioContent.focusAreasTitle,
+                  focus.areasTitle,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -143,9 +146,9 @@ class _HeroSideCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Text(
-                      PortfolioContent.availabilityLabel,
-                      style: TextStyle(
+                    Text(
+                      focus.availabilityLabel,
+                      style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: AppColors.available,
@@ -157,7 +160,7 @@ class _HeroSideCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          ...PortfolioContent.focusAreas.map(
+          ...focus.areas.map(
             (item) => Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Row(
@@ -169,7 +172,11 @@ class _HeroSideCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       color: accent.withValues(alpha: 0.12),
                     ),
-                    child: Icon(item.icon, color: accent, size: 18),
+                    child: Icon(
+                      iconFromName(item.icon),
+                      color: accent,
+                      size: 18,
+                    ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
